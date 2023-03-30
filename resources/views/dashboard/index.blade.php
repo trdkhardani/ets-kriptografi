@@ -36,7 +36,7 @@
       <h1>Selamat Datang!</h1>
       Berikut adalah data diri anda: <br />
       Nama: {{ auth()->user()->name }} <br />
-      NISN: {{ auth()->user()->nisn }} <br />
+      NISN: {{ $nisn }} <br />
     </div>
   </body>
 </html>

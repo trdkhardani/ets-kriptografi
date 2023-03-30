@@ -26,19 +26,42 @@
           <main class="form-signin">
                 <h1 class="h3 mb-3 fw-normal text-center text-white">Halaman Pendaftaran</h1>
                 <form action="/register" method="post">
+                    @csrf
+                    <div class="form-floating text-info">
+                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="nama" placeholder="Nama Siswa" required value="{{ old('name') }}">
+                        <label for="name">Nama Siswa</label>
+                        @error('name')
+                        <div class="invalid-feedback">
+                        {{ $message }} {{-- secara otomatis akan menampilkan pesan error dari validasi yang kita buat di controller --}}
+                        </div>
+                        @enderror
+                      </div>
                   <div class="form-floating text-info">
-                    <input type="email" name="email" class="form-control" id="email" placeholder="name@example.com" required value="">
+                    <input type="email" name="email" class="form-control @error('name') is-invalid @enderror" id="email" placeholder="name@example.com" required value="{{ old('email') }}">
                     <label for="email">Alamat Email</label>
+                    @error('email')
                     <div class="invalid-feedback">
+                    {{ $message }} {{-- secara otomatis akan menampilkan pesan error dari validasi yang kita buat di controller --}}
                     </div>
+                    @enderror
                   </div>
                   <div class="form-floating text-info">
-                    <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
+                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="Password" required>
                     <label for="password">Password</label>
+                    @error('password')
+                    <div class="invalid-feedback">
+                    {{ $message }} {{-- secara otomatis akan menampilkan pesan error dari validasi yang kita buat di controller --}}
+                    </div>
+                    @enderror
                   </div>
                   <div class="form-floating text-info">
-                    <input type="text" name="nisn" class="form-control" id="nisn" placeholder="NISN" required>
+                    <input type="text" name="nisn" class="form-control @error('nisn') is-invalid @enderror" id="nisn" placeholder="NISN" required value="{{ old('nisn') }}">
                     <label for="nisn">NISN</label>
+                    @error('nisn')
+                    <div class="invalid-feedback">
+                    {{ $message }} {{-- secara otomatis akan menampilkan pesan error dari validasi yang kita buat di controller --}}
+                    </div>
+                    @enderror
                   </div>
                   <div class="checkbox mb-3">
                   </div>
