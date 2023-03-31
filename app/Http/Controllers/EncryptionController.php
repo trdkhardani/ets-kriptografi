@@ -9,16 +9,6 @@ class EncryptionController extends Controller
     private $q = 11; // prime number q
     private $e = 17; // public exponent
 
-    // Fungsi untuk menghasilkan bilangan prima secara acak
-    // public function generatePrime($min, $max)
-    // {
-    //     $num = rand($min, $max);
-    //     while (!$this->isPrime($num)) {
-    //         $num = rand($min, $max);
-    //     }
-    //     return $num;
-    // }
-
     // Fungsi untuk memeriksa apakah sebuah bilangan prima
     public function isPrime($num)
     {

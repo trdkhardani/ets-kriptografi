@@ -40,18 +40,4 @@ class RegisterController extends Controller
 
         return redirect('/')->with('success', 'Registrasi Berhasil!');
     }
-
-    public function rsa()
-    {
-        $encryptionController = new EncryptionController(); // Define an instance of EncryptionController
-        // Contoh penggunaan fungsi-fungsi di atas
-        $message = '0031810408';
-        $keys = $encryptionController->generateRSAKeys(100, 1000);
-        $encryptedMessage = $encryptionController->encryptRSA($message, $keys['public']);
-        $decryptedMessage = $encryptionController->decryptRSA($encryptedMessage, $keys['private']);
-
-        echo "Pesan Asli: " . $message . "<br>";
-        echo "Pesan Enkrip: " . $encryptedMessage . "<br>";
-        echo "Pesan Dekrip: " . $decryptedMessage . "<br>";
-    }
 }
