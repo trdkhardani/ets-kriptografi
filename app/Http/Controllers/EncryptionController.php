@@ -9,20 +9,6 @@ class EncryptionController extends Controller
     private $q = 11; // prime number q
     private $e = 17; // public exponent
 
-    // Fungsi untuk memeriksa apakah sebuah bilangan prima
-    public function isPrime($num)
-    {
-        if ($num <= 1) {
-            return false;
-        }
-        for ($i = 2; $i <= sqrt($num); $i++) {
-            if ($num % $i == 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     // Fungsi untuk menghasilkan kunci publik dan privat RSA
     public function generateRSAKeys()
     {
@@ -30,15 +16,6 @@ class EncryptionController extends Controller
         $phi = ($this->p - 1) * ($this->q - 1);
         $d = $this->modInverse($this->e, $phi);
         return array('public' => array('e' => $this->e, 'n' => $n), 'private' => array('d' => $d, 'n' => $n));
-    }
-
-    // Fungsi untuk mencari nilai gcd
-    public function gcd($a, $b)
-    {
-        if ($b == 0) {
-            return $a;
-        }
-        return $this->gcd($b, $a % $b);
     }
 
     // Fungsi untuk mencari nilai modulo inverse
