@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 
+use App\Http\Controllers\EncryptionController;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -14,16 +16,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $encryptionController = new EncryptionController(); // Define an instance of EncryptionController
+        $keys = $encryptionController->generateRSAKeys(100, 1000);
+
+        $nisn_1 = $encryptionController->encryptRSA('0032592461', $keys['public']);
+
         User::create
         (
             [
-                'name' => 'Tridiktya Hardani Putra',
-                'email' => 'tridiktya@gmail.com',
-                'nisn' => '0085196127',
-                'password' => bcrypt('tridik12'),
-            ]
+                'name' => 'Naufal Arfan Putra Azaruddin',
+                'email' => 'napa@gmail.com',
+                'nisn' => $nisn_1,
+                'password' => bcrypt('password'),
+            ],
         );
 
-        User::factory(3)->create();
+        // User::factory(3)->create();
     }
 }

@@ -2,54 +2,92 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 
 class EncryptionController extends Controller
 {
-    public function rsa_encrypt($msg, $p, $q, $e)
+    private $p = 7; // prime number p
+    private $q = 11; // prime number q
+    private $e = 17; // public exponent
+
+    // Fungsi untuk menghasilkan bilangan prima secara acak
+    // public function generatePrime($min, $max)
+    // {
+    //     $num = rand($min, $max);
+    //     while (!$this->isPrime($num)) {
+    //         $num = rand($min, $max);
+    //     }
+    //     return $num;
+    // }
+
+    // Fungsi untuk memeriksa apakah sebuah bilangan prima
+    public function isPrime($num)
     {
-        $n = $p * $q;
-        $phi = ($p - 1) * ($q - 1);
-        $msg = str_split($msg, 1);
-        $ciphertext = "";
-        foreach ($msg as $char) {
-            $char_ascii = ord($char);
-            $char_ciphertext = gmp_strval(gmp_pow($char_ascii, $e) % $n);
-            $ciphertext .= str_pad($char_ciphertext, strlen($n) - 1, "0", STR_PAD_LEFT);
+        if ($num <= 1) {
+            return false;
         }
-        return $ciphertext;
+        for ($i = 2; $i <= sqrt($num); $i++) {
+            if ($num % $i == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    public function rsa_decrypt($ciphertext, $p, $q, $e)
+    // Fungsi untuk menghasilkan kunci publik dan privat RSA
+    public function generateRSAKeys()
     {
-        $n = $p * $q;
-        $phi = ($p - 1) * ($q - 1);
-        $ciphertext = str_split($ciphertext, strlen($n) - 1);
-        $plaintext = "";
-        foreach ($ciphertext as $char_ciphertext) {
-            $char_ascii = gmp_strval(gmp_pow($char_ciphertext, $this->mod_inverse($e, $phi)) % $n);
-            $plaintext .= chr($char_ascii);
-        }
-        return $plaintext;
+        $n = $this->p * $this->q;
+        $phi = ($this->p - 1) * ($this->q - 1);
+        $d = $this->modInverse($this->e, $phi);
+        return array('public' => array('e' => $this->e, 'n' => $n), 'private' => array('d' => $d, 'n' => $n));
     }
 
-    public function mod_inverse($a, $n)
+    // Fungsi untuk mencari nilai gcd
+    public function gcd($a, $b)
     {
-        list($d, $x, $y) = $this->extended_gcd($a, $n);
-        if ($d != 1) {
-            return null;
+        if ($b == 0) {
+            return $a;
         }
-        return ($x % $n + $n) % $n;
+        return $this->gcd($b, $a % $b);
     }
 
-    public function extended_gcd($a, $b)
+    // Fungsi untuk mencari nilai modulo inverse
+    public function modInverse($a, $m)
     {
-        if ($a == 0) {
-            return array($b, 0, 1);
+        for ($x = 1; $x < $m; $x++) {
+            if (($a * $x) % $m == 1) {
+                return $x;
+            }
         }
-        list($gcd, $x1, $y1) = $this->extended_gcd($b % $a, $a);
-        $x = $y1 - floor($b / $a) * $x1;
-        $y = $x1;
-        return array($gcd, $x, $y);
+    }
+
+    // Fungsi untuk melakukan enkripsi pesan
+    public function encryptRSA($message, $publicKey)
+    {
+        $e = $publicKey['e'];
+        $n = $publicKey['n'];
+        $encryptedMessage = '';
+        for ($i = 0; $i < strlen($message); $i++) {
+            $m = ord($message[$i]);
+            $c = bcpowmod($m, $e, $n);
+            $encryptedMessage .= $c . ' ';
+        }
+        return trim($encryptedMessage);
+    }
+
+    // Fungsi untuk melakukan dekripsi pesan
+    public function decryptRSA($encryptedMessage, $privateKey)
+    {
+        $d = $privateKey['d'];
+        $n = $privateKey['n'];
+        $decryptedMessage = '';
+        $encryptedMessageArr = explode(' ', $encryptedMessage);
+        foreach ($encryptedMessageArr as $c) {
+            if ($c != '') {
+                $m = bcpowmod($c, $d, $n);
+                $decryptedMessage .= chr($m);
+            }
+        }
+        return $decryptedMessage;
     }
 }

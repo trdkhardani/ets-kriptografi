@@ -23,7 +23,7 @@ class RegisterController extends Controller
             [
                 'name' => 'required|max:255|',
                 'email' => 'required|unique:users',
-                'nisn' => 'required|numeric',
+                'nisn' => 'required|numeric|digits:10|unique:users',
                 'password' => 'required|min:5|max:255'
             ]
         );
@@ -31,7 +31,8 @@ class RegisterController extends Controller
         $validatedData['password'] = Hash::make($validatedData['password']); //mengenkripsi password
 
         $encryptionController = new EncryptionController(); // Define an instance of EncryptionController
-        $validatedData['nisn'] = $encryptionController->rsa_encrypt($validatedData['nisn'], 17, 19, 7); //mengenkripsi nisn
+        $keys = $encryptionController->generateRSAKeys(100, 1000);
+        $validatedData['nisn'] = $encryptionController->encryptRSA($validatedData['nisn'], $keys['public']);
 
         User::create($validatedData);
 
@@ -42,19 +43,15 @@ class RegisterController extends Controller
 
     public function rsa()
     {
-        $p = 17;
-        $q = 19;
-        $e = 7;
-
-        $msg = "007007007007";
         $encryptionController = new EncryptionController(); // Define an instance of EncryptionController
+        // Contoh penggunaan fungsi-fungsi di atas
+        $message = '0031810408';
+        $keys = $encryptionController->generateRSAKeys(100, 1000);
+        $encryptedMessage = $encryptionController->encryptRSA($message, $keys['public']);
+        $decryptedMessage = $encryptionController->decryptRSA($encryptedMessage, $keys['private']);
 
-        // call the rsa_encrypt method on the instance
-        $ciphertext = $encryptionController->rsa_encrypt($msg, $p, $q, $e);
-        echo "Encrypted message: $ciphertext\n";
-
-        // call the rsa_decrypt method on the instance
-        $plaintext = $encryptionController->rsa_decrypt($ciphertext, $p, $q, $e);
-        echo "Decrypted message: $plaintext\n";
+        echo "Pesan Asli: " . $message . "<br>";
+        echo "Pesan Enkrip: " . $encryptedMessage . "<br>";
+        echo "Pesan Dekrip: " . $decryptedMessage . "<br>";
     }
 }

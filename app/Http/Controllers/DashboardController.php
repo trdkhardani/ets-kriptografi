@@ -14,10 +14,12 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Decrypt the nisn
         $encryptionController = new EncryptionController(); // Define an instance of EncryptionController
         $nisn = User::where('id', Auth::user()->id)->first()->nisn; //mengambil nisn dari database
-        $nisn = $encryptionController->rsa_decrypt(Auth::user()->$nisn, 17, 19, 7); //mengenkripsi nisn
+
+        // Decrypt nisn
+        $keys = $encryptionController->generateRSAKeys(100, 1000);
+        $nisn = $encryptionController->decryptRSA($nisn, $keys['private']); //mendecrypt nisn
 
         return view('dashboard.index', [
             'nisn' => $nisn

@@ -23,6 +23,13 @@
           <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div> -->
+          <style>
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            }
+          </style>
           <main class="form-signin">
                 <h1 class="h3 mb-3 fw-normal text-center text-white">Halaman Pendaftaran</h1>
                 <form action="/register" method="post">
@@ -55,7 +62,7 @@
                     @enderror
                   </div>
                   <div class="form-floating text-info">
-                    <input type="text" name="nisn" class="form-control @error('nisn') is-invalid @enderror" id="nisn" placeholder="NISN" required value="{{ old('nisn') }}">
+                    <input type="number" name="nisn" class="form-control @error('nisn') is-invalid @enderror" id="nisn" placeholder="NISN" required value="{{ old('nisn') }}">
                     <label for="nisn">NISN</label>
                     @error('nisn')
                     <div class="invalid-feedback">
