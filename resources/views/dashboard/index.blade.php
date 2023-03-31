@@ -37,6 +37,7 @@
       Berikut adalah data diri anda: <br />
       Nama: {{ auth()->user()->name }} <br />
       NISN: {{ $nisn }} <br />
+      <h4 class="mt-3 text-danger">Belum masa pemilihan SMA Negeri</h4>
     </div>
   </body>
 </html>
